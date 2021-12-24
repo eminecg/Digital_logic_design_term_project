@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class main {
@@ -51,12 +52,8 @@ public class main {
         }
         sc.close();     //closes the scanner
 
-        // print
-        for ( int i = 0; i < myOpcodeList.size(); i++ ) {
-            for ( int j = 0; j < myOpcodeList.get(i).size(); j++ ) {
-                System.out.println(myOpcodeList.get(i).get(j));
-            }
-        }
+
+
         String dest;
         String src1;
         String src2;
@@ -72,28 +69,42 @@ public class main {
 
 
         for ( int i = 0; i < myOpcodeList.size(); i++ ) {
+            //                                              ------------------ and
             if (myOpcodeList.get(i).get(0).equals(opcodeList[0][0])) {// AND
-                dest = myOpcodeList.get(i).get(1);
-                src1 = myOpcodeList.get(i).get(2);
-                src2 = myOpcodeList.get(i).get(3);
-
-                  andFuncForm(opcodeList[0][1],dest,src1,src2);
-            } else if (myOpcodeList.get(i).get(0).equals(opcodeList[1][0])) {   // ANDI
-                dest = myOpcodeList.get(i).get(1);
-                src1 = myOpcodeList.get(i).get(2);
-                imm = myOpcodeList.get(i).get(3);
-
-                andIFuncForm(opcodeList[1][1],dest,src1,imm);
 
 
 
+              //  andFuncForm(opcodeList[0][1],dest,src1,src2);
+
+            }//                                              ------------------ andI
+            else if (myOpcodeList.get(i).get(0).equals(opcodeList[1][0])) {   // ANDI
+                dest = convertRegistersToBinary(myOpcodeList.get(i).get(1));
+                src1 = convertRegistersToBinary(myOpcodeList.get(i).get(2));
+                // Since immediate can be negative or positive, determine it's sign
+
+                if(Integer.parseInt(myOpcodeList.get(i).get(3))<0){
+                    imm=Negative_signed_numb(myOpcodeList.get(i).get(3));
+                }
+                else
+                    imm=Positive_signed_numb(myOpcodeList.get(i).get(3));
+
+                String binaryResult= "";
+                binaryResult=opcodeList[1][1]+dest+src1+imm;
+                System.out.println(binaryResult);
+
+
+
+                //                andIFuncForm(opcodeList[1][1],dest,src1,imm);
+
+
+//                                              ------------------ add
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[2][0])) { // ADD
 
                 dest = myOpcodeList.get(i).get(1);
                 src1 = myOpcodeList.get(i).get(2);
                 src2 = myOpcodeList.get(i).get(3);
 
-                andFuncForm(opcodeList[2][1], dest, src1, src2);
+              //  andFuncForm(opcodeList[2][1], dest, src1, src2);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[3][0])) {// ADDI
                 dest = myOpcodeList.get(i).get(1);
@@ -108,7 +119,7 @@ public class main {
                 src1 = myOpcodeList.get(i).get(2);
                 src2 = myOpcodeList.get(i).get(3);
 
-                andFuncForm(opcodeList[4][1], dest, src1, src2);
+              //  andFuncForm(opcodeList[4][1], dest, src1, src2);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[5][0])) {//  ORI
                 System.out.println(opcodeList[5][1]);
@@ -119,7 +130,7 @@ public class main {
                 src1 = myOpcodeList.get(i).get(2);
                 src2 = myOpcodeList.get(i).get(3);
 
-                andFuncForm(opcodeList[6][1], dest, src1, src2);
+              //  andFuncForm(opcodeList[6][1], dest, src1, src2);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[7][0])) {   // XORI
                 dest = myOpcodeList.get(i).get(1);
@@ -298,6 +309,59 @@ public class main {
 
     }
 
+
+
+    static String convertBinary(int number) {
+        int reminder;
+        String bin_number = "";
+
+        while (number > 0) {
+            reminder = number % 2;
+            bin_number = reminder + "" + bin_number;
+            number = number / 2;
+        }
+
+        return bin_number;
+    }
+    static String Positive_signed_numb(String number) {
+
+        String Real_number = convertBinary(Integer.parseInt(number));
+        Real_number = String.format("%0" + (8 - Real_number.length()) + "d%s", 0, Real_number); //complements 2 byte
+
+        return Real_number;
+
+    }
+    //convert negative decimal to binary by using 2's complement representation
+    static String Negative_signed_numb(String number) {
+
+        String Real_number = convertBinary(Integer.parseInt(number.substring(1)));
+        Real_number = String.format("%0" + (8 - Real_number.length()) + "d%s", 0, Real_number); //complement 2 byte
+
+        char[] chars = Real_number.toCharArray(); //to access each character
+
+        //it progresses from the right until it reaches 1, when it reaches 1, it makes the 1s 0, the 0s 1, starting from the left of 1.
+
+        int size = Real_number.length();
+        int j;
+        int i = size - 1;
+        while (i >= 0) {
+            if (chars[i] == '1') {
+                for (j = i - 1; j >= 0; j--) {
+                    if (chars[j] == '1') {
+                        chars[j] = '0';
+                    } else if (chars[j] == '0') {
+                        chars[j] = '1';
+                    }
+                }
+                Real_number = String.valueOf(chars);
+                break;
+            }
+            i = i - 1;
+        }
+        return Real_number;
+    }
+
+
      static String BranchFunction(String operation, String opp1, String opp2, String addr) {
         return "";
     }
@@ -307,14 +371,19 @@ public class main {
     }
 
 
-    static String  andFuncForm(String operation,String dest,String src1,String src2){
+    static String  andFuncForm(String operation,int dest,int src1,int src2){
+        String binaryResult= "";
         if (operation.equals("ADD") || operation.equals( "AND")){
-
-           // binary_register_values = self.__convert_registers_to_binary(dest = dest, src_1 = src_1, src_2 = src_2)
-
-            //binary_code += ''.join(binary_register_values)
+//            dest = convertRegistersToBinary(myOpcodeList.get(i).get(1));
+//            src1 = convertRegistersToBinary(myOpcodeList.get(i).get(2));
+//            src2 = String.format("%8s",  convertRegistersToBinary(myOpcodeList.get(i).get(3))    ).replaceAll(" ", "0");
+//
+//            binaryResult=opcodeList[0][1]+dest+src1+src2;
+//
+//
+//            //binary_code += ''.join(binary_register_values)
         }
-        return " ";
+        return  binaryResult;
     }
 
     static String  andIFuncForm(String operation,String dest,String src1,String imm){
@@ -327,11 +396,42 @@ public class main {
         return " ";
     }
 
-    static String  convertRegistersToBinary(){
+        static String  convertRegistersToBinary(String src1 ){
 
+        int registerNo= Integer.parseInt(src1.split("R")[1]);
+           String binaryResult;
+            if(registerNo>15 || registerNo<0 ){
+                System.out.println("There are 16 register in processor.");
+                binaryResult=null;
+            }
+            else{
 
-        return "";
+                binaryResult= Integer.toBinaryString(registerNo);
+
+                binaryResult  =String.format("%4s",binaryResult).replaceAll(" ","0");
+                    System.out.println("Binary result "+binaryResult);
+                }
+        return binaryResult;
     }
+
+    static String  convertImmidateToBinary(String src1 ){ // immidate value 8 bit = 1 bit sign 7 bit value
+
+        int registerNo= Integer.parseInt(src1.split("R")[1]);
+        String binaryResult;
+        if(registerNo>15 || registerNo<0 ){
+            System.out.println("There are 16 register in processor.");
+            binaryResult=null;
+        }
+        else{
+
+            binaryResult= Integer.toBinaryString(registerNo);
+
+            binaryResult  =String.format("%4s",binaryResult).replaceAll(" ","0");
+            System.out.println("Binary result "+binaryResult);
+        }
+        return binaryResult;
+    }
+
 
     static String  LD(String op,String dest,String address){
 
