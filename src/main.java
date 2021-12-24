@@ -64,6 +64,11 @@ public class main {
         String opp1;
         String opp2;
         String addr;
+        String n = "0";
+        String p = "0";
+        String z= "0";
+        String PC;
+
 
 
         for ( int i = 0; i < myOpcodeList.size(); i++ ) {
@@ -117,7 +122,11 @@ public class main {
                 andFuncForm(opcodeList[6][1], dest, src1, src2);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[7][0])) {   // XORI
-                System.out.println(opcodeList[7][1]);
+                dest = myOpcodeList.get(i).get(1);
+                src1 = myOpcodeList.get(i).get(2);
+                imm = myOpcodeList.get(i).get(3);
+
+                andIFuncForm(opcodeList[7][1],dest,src1,imm);
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[8][0])) { // LD
 
 
@@ -126,38 +135,175 @@ public class main {
 
 
                 if (Integer.parseInt(addr) < 0) {
-                    System.out.println("Address for LD must be greater than 0 !");
-                    break;
-
+                    n="1";
+                    p="0";
+                    z="0";
 
                 }
-                if ( Integer.parseInt(addr) > 1024){  // 2'10
-                    System.out.println("Address can\'t be greater than 256 for LD !");
+                else if (Integer.parseInt(addr) == 0){
+                    z="1";
+                    n="0";
+                    p="0";
+                }
+                else if( Integer.parseInt(addr) > 0 && Integer.parseInt(addr) < 128){
+                    z="0";
+                    n="0";
+                    p="1";
+                }
+              else{
+                    System.out.println("Address can\'t be greater than 512 for LD !");
                     break;
                 }
 
-            // eksik
+               LD(opcodeList[8][1],dest,addr);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[9][0])) {// ST
-                System.out.println(opcodeList[9][1]);
+                src1 = myOpcodeList.get(i).get(1);
+                addr = myOpcodeList.get(i).get(2);
+
+
+                if (Integer.parseInt(addr) < 0) {
+                    n="1";
+                    p="0";
+                    z="0";
+
+                }
+                else if (Integer.parseInt(addr) == 0){
+                    z="1";
+                    n="0";
+                    p="0";
+                }
+                else if( Integer.parseInt(addr) > 0 && Integer.parseInt(addr) < 128){
+                    z="0";
+                    n="0";
+                    p="1";
+                }
+                else{
+                    System.out.println("Address can\'t be greater than 512 for st !");
+                    break;
+                }
+
+                ST(opcodeList[9][1],src1,addr);
+
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[10][0])) {  // JUMP
-                System.out.println(opcodeList[10][1]);
+                addr= myOpcodeList.get(i).get(1);
+
+                if( Integer.parseInt(addr) > -8192 &&  Integer.parseInt(addr) > 8191){
+                    System.out.println("PC-Relative address must be between -2048 and 2047 !");
+                   break;
+                }
+                String sign;
+                if(Integer.parseInt(addr) < 0) {
+                    sign = "1";
+                }
+                else{
+                    sign = "0";
+                }
+
+                JmpFunction(opcodeList[10][1],addr);
+
+
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[11][0])) {  //  BEQ
-                System.out.println(opcodeList[11][1]);
+
+                opp1 =myOpcodeList.get(i).get(1);
+                opp2= myOpcodeList.get(i).get(2);
+                addr= myOpcodeList.get(i).get(3);
+
+                if(Integer.parseInt(addr)>32){
+                    System.out.println("Address can\'t be greater than 32 for st !"); //2^5
+                    break;
+                }
+                if(opp1.equals(opp2)){
+                    z="1";
+                    n="0";
+                    p="0";
+                }
+                PC= n + z + p + addr;
+                 BranchFunction(opcodeList[11][1],opp1,opp2,addr);
+
+
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[12][0])) {  //  BGT
-                System.out.println(opcodeList[12][1]);
+                opp1 =myOpcodeList.get(i).get(1);
+                opp2= myOpcodeList.get(i).get(2);
+                addr= myOpcodeList.get(i).get(3);
+
+                if(Integer.parseInt(addr)>32){
+                    System.out.println("Address can\'t be greater than 32 for st !"); //2^5
+                    break;
+                }
+                if(Integer.parseInt(opp1)>Integer.parseInt(opp2)){
+                    z="0";
+                    n="0";
+                    p="1";
+                }
+                PC= n + z + p + addr;
+                BranchFunction(opcodeList[12][1],opp1,opp2,addr);
+
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[13][0])) {   // BLT
-                System.out.println(opcodeList[13][1]);
+                opp1 =myOpcodeList.get(i).get(1);
+                opp2= myOpcodeList.get(i).get(2);
+                addr= myOpcodeList.get(i).get(3);
+
+                if(Integer.parseInt(addr)>32){
+                    System.out.println("Address can\'t be greater than 32 for st !"); //2^5
+                    break;
+                }
+                if(Integer.parseInt(opp1)<Integer.parseInt(opp2)){
+                    z="0";
+                    n="1";
+                    p="0";
+                }
+                PC= n + z + p + addr;
+                BranchFunction(opcodeList[13][1],opp1,opp2,addr);
+
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[14][0])) {    // BGE
-                System.out.println(opcodeList[14][1]);
+                opp1 =myOpcodeList.get(i).get(1);
+                opp2= myOpcodeList.get(i).get(2);
+                addr= myOpcodeList.get(i).get(3);
+
+                if(Integer.parseInt(addr)>32){
+                    System.out.println("Address can\'t be greater than 32 for st !"); //2^5
+                    break;
+                }
+                if(Integer.parseInt(opp1)>= Integer.parseInt(opp2)){
+                    z="1";
+                    n="0";
+                    p="1";
+                }
+                PC= n + z + p + addr;
+                BranchFunction(opcodeList[13][1],opp1,opp2,addr);
+
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[15][0])) {// BLE
-                System.out.println(opcodeList[15][1]);
+                opp1 =myOpcodeList.get(i).get(1);
+                opp2= myOpcodeList.get(i).get(2);
+                addr= myOpcodeList.get(i).get(3);
+
+                if(Integer.parseInt(addr)>32){
+                    System.out.println("Address can\'t be greater than 32 for st !"); //2^5
+                    break;
+                }
+                if(Integer.parseInt(opp1)<=Integer.parseInt(opp2)){
+                    z="1";
+                    n="1";
+                    p="0";
+                }
+                PC= n + z + p + addr;
+                BranchFunction(opcodeList[14][1],opp1,opp2,addr);
+
             } else {
                 System.out.println("Please enter correct input.");
             }
         }
 
 
+    }
+
+     static String BranchFunction(String operation, String opp1, String opp2, String addr) {
+        return "";
+    }
+
+    static String JmpFunction(String operation, String addr) {
+        return "";
     }
 
 
@@ -187,7 +333,16 @@ public class main {
         return "";
     }
 
+    static String  LD(String op,String dest,String address){
 
 
+        return "";
+    }
+
+    static String  ST(String op,String dest,String address){
+
+
+        return "";
+    }
 }
 
