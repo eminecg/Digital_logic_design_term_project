@@ -65,9 +65,6 @@ public class main {
         sc.close();     //closes the scanner
 
 
-
-
-
         ArrayList<String> outputHex = new ArrayList<String>();         // don't forget the convert binary to hex for each if statement !!!
         for ( int i = 0; i < myOpcodeList.size(); i++ ) {
             String currentInstHex = "null";
@@ -132,87 +129,69 @@ public class main {
 
                 opp1 =myOpcodeList.get(i).get(1);
                 opp2= myOpcodeList.get(i).get(2);
+
+                if(Integer.parseInt(myOpcodeList.get(i).get(3))>32){
+                    System.out.println("Address can\'t be greater than 32 for beq !"); //2^5
+                    break;
+                }
+
                 addr= convertBinary(Integer.parseInt(myOpcodeList.get(i).get(3)));
 
-//                if(Integer.parseInt(addr)>32){
-//                    System.out.println("Address can\'t be greater than 32 for beq !"); //2^5
-//                    break;
-//                }
-
-                currentInstHex =BranchInstruction(11,i,opp1,opp2,addr);
+                BranchInstruction(11,i,opp1,opp2,addr);
 
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[12][0])) {  //  BGT
                 opp1 =myOpcodeList.get(i).get(1);
                 opp2= myOpcodeList.get(i).get(2);
+
+                if(Integer.parseInt(myOpcodeList.get(i).get(3))>32){
+                    System.out.println("Address can\'t be greater than 32 for bgt !"); //2^5
+                    break;
+                }
+
                 addr= convertBinary(Integer.parseInt(myOpcodeList.get(i).get(3)));
 
-//                if(Integer.parseInt(addr)>32){
-//                    System.out.println("Address can\'t be greater than 32 for bgt !"); //2^5
-//                    break;
-//                }
-
-                currentInstHex= BranchInstruction(12,i,opp1,opp2,addr);
+                BranchInstruction(12,i,opp1,opp2,addr);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[13][0])) {   // BLT
                 opp1 =myOpcodeList.get(i).get(1);
                 opp2= myOpcodeList.get(i).get(2);
+
+                if(Integer.parseInt(myOpcodeList.get(i).get(3))>32){
+                    System.out.println("Address can\'t be greater than 32 for blt !"); //2^5
+                    break;
+                }
+
                 addr= convertBinary(Integer.parseInt(myOpcodeList.get(i).get(3)));
 
-//                if(Integer.parseInt(addr)>32){
-//                    System.out.println("Address can\'t be greater than 32 for blt !"); //2^5
-//                    break;
-//                }
-
-                currentInstHex=BranchInstruction(13,i,opp1,opp2,addr);
+                BranchInstruction(13,i,opp1,opp2,addr);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[14][0])) {    // BGE
                 opp1 =myOpcodeList.get(i).get(1);
                 opp2= myOpcodeList.get(i).get(2);
+
+                if(Integer.parseInt(myOpcodeList.get(i).get(3))>32){
+                    System.out.println("Address can\'t be greater than 32 for bge !"); //2^5
+                    break;
+                }
+
                 addr= convertBinary(Integer.parseInt(myOpcodeList.get(i).get(3)));
 
-//                if(Integer.parseInt(addr)>32){
-//                    System.out.println("Address can\'t be greater than 32 for bge !"); //2^5
-//                    break;
-//                }
-
-                currentInstHex=BranchInstruction(14,i,opp1,opp2,addr);
+                BranchInstruction(14,i,opp1,opp2,addr);
 
             } else if (myOpcodeList.get(i).get(0).equals(opcodeList[15][0])) {// BLE
                 opp1 =myOpcodeList.get(i).get(1);
                 opp2= myOpcodeList.get(i).get(2);
+
+                if(Integer.parseInt(myOpcodeList.get(i).get(3))>32){
+                    System.out.println("Address can\'t be greater than 32 for ble !"); //2^5
+                    break;
+                }
+
                 addr= convertBinary(Integer.parseInt(myOpcodeList.get(i).get(3)));
 
-//                if(Integer.parseInt(addr)>32){
-//                    System.out.println("Address can\'t be greater than 32 for ble !"); //2^5
-//                    break;
-//                }
-
-                currentInstHex=BranchInstruction(15,i,opp1,opp2,addr);
-            } else {
-                System.out.println("Please enter correct input.");
+                BranchInstruction(15,i,opp1,opp2,addr);
             }
-            // add to hex to the output arrayList
-            outputHex.add(currentInstHex);
-
-        }
-
-        for(int i=0;i<outputHex.size();i++){
-            System.out.println(outputHex.get(i));
-        }
-
-        // write output arrayList hex to the output hex file
-
-        // writing output to .hex file
-        try {
-            FileWriter myWriter = new FileWriter("output.hex");
-
-
-            myWriter.close();
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
         }
 
 
@@ -279,7 +258,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+               // System.out.println(binaryResult);
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BLE")) {
@@ -295,7 +274,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+                //System.out.println(binaryResult);
             }
             else{
                 n = "0";
@@ -305,7 +284,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+               // System.out.println(binaryResult);
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BGT")) {
@@ -319,7 +298,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+                //System.out.println(binaryResult);
             }
             else{
                 p = "0";
@@ -329,7 +308,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+              //  System.out.println(binaryResult);
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BGT")) {
@@ -343,7 +322,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+               // System.out.println(binaryResult);
             }
             else{
                 z = "0";
@@ -351,7 +330,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+             //   System.out.println(binaryResult);
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BGT")) {
@@ -367,7 +346,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+               // System.out.println(binaryResult);
             }
             else{
                 z = "0";
@@ -375,7 +354,7 @@ public class main {
                 opp1_Converted = convertBinary(Integer.parseInt(operation1));
                 opp2_Converted = convertBinary(Integer.parseInt(operation2));
                 binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + p + z + PCOffsetExtended; //ld instruction binary  result
-                System.out.println(binaryResult);
+              //  System.out.println(binaryResult);
             }
         }
         return binaryResult ;
@@ -456,7 +435,7 @@ public class main {
 
     static String  andIFuncForm(String operation,int opIndex){
         String binaryResult= "";
-        if (operation.equals("ADD") || operation.equals( "AND")){
+        if (operation.equals("ADDI") || operation.equals( "ANDI")){
             dest = convertRegistersToBinary(myOpcodeList.get(opIndex).get(1));
             src1 = convertRegistersToBinary(myOpcodeList.get(opIndex).get(2));
             // Since immediate can be negative or positive, determine it's sign
@@ -486,7 +465,7 @@ public class main {
                 binaryResult= Integer.toBinaryString(registerNo);
 
                 binaryResult  =String.format("%4s",binaryResult).replaceAll(" ","0");
-                    System.out.println("Binary result "+binaryResult);
+                  //  System.out.println("Binary result "+binaryResult);
                 }
         return binaryResult;
     }
