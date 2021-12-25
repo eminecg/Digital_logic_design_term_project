@@ -253,6 +253,7 @@ public class main {
         String opp1_Converted;
         String opp2_Converted;
 
+
         PCOffsetExtended = String.format("%3s", address).replaceAll(" ", "0"); //PcOffset allocate 3 bit of adress if needed, it can be extended
 
         if(myOpcodeList.get(indexOfInst).get(0).equals("BQE")) { //BQE
