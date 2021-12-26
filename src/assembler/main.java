@@ -1,4 +1,4 @@
-/*
+package assembler;/*
 Emine Çığ          150118012
 Sena Altıntaş      150118007
 Mehmet Akif Akkaya 150118041
@@ -258,7 +258,7 @@ public class main {
             outputBinary.add(currentInstBinary);
             // add to the hex list
             outputHex.add(currentInstHex);
-            
+
         }
 
 
