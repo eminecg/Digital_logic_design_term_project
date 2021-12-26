@@ -258,9 +258,7 @@ public class main {
             outputBinary.add(currentInstBinary);
             // add to the hex list
             outputHex.add(currentInstHex);
-
-
-
+            
         }
 
 
