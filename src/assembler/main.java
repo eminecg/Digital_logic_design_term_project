@@ -1,15 +1,15 @@
-package assembler;/*
+package assembler;
+/*
 Emine Çığ          150118012
 Sena Altıntaş      150118007
 Mehmet Akif Akkaya 150118041
 Süleyman Keleş     150118039
-
  */
 
 import java.io.*;
 import java.util.*;
 
-public class main {
+public class main{
 
     // Instruction name and Opcodes
     static String opcodeList[][]={
@@ -22,13 +22,13 @@ public class main {
             { "XOR", "0110"},
             { "XORI", "0111"},
             { "LD", "1000"},
-            { "ST", "1001"},
-            { "JUMP", "1010"},
-            { "BEQ", "1011"},
-            { "BGT", "1100"},
-            { "BLT", "1101"},
-            { "BGE", "1110"},
-            { "BLE", "1111"},
+            { "ST", "1101"},
+            { "JUMP", "1111"},
+            { "BEQ", "1010"},
+            { "BGT", "1001"},
+            { "BLT", "1100"},
+            { "BGE", "1011"},
+            { "BLE", "1110"},
     };
 
     // 2D ArrayList to hold instructions from input file as separated each value
@@ -144,7 +144,7 @@ public class main {
 
                 if( Integer.parseInt(addr) > -8192 &&  Integer.parseInt(addr) > 8191){ // checks range of the addr value
                     System.out.println("PC-Relative address must be between -2048 and 2047 !");
-                   break;
+                    break;
                 }
                 if(Integer.parseInt(addr)<0){
                     addr= Negative_signed_numb(myOpcodeList.get(i).get(1) ,14);
@@ -340,121 +340,102 @@ public class main {
     // Branch Instructions , determines current instruction type then returns binary bit sequence of this instruction .
     static String BranchInstruction(int indexOfOpcode,int indexOfInst,String operation1,String operation2, String address){
 
-        String n,p,z;
         String PCOffsetExtended;
         String binaryResult ="";
         String opp1_Converted;
         String opp2_Converted;
 
         // does bit extension of address
-        PCOffsetExtended = String.format("%3s", address).replaceAll(" ", "0"); //PcOffset allocate 3 bit of adress if needed, it can be extended
+        PCOffsetExtended = String.format("%6s", address).replaceAll(" ", "0"); //PcOffset allocate 6 bit of adress if needed, it can be extended
 
         if(myOpcodeList.get(indexOfInst).get(0).equals("BEQ")) { //BEQ
-            n = "0";
-            p = "0";
 
             if (operation1.equals(operation2)) {
-                z = "1";
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + PCOffsetExtended; //ld instruction binary  result
 
             }
             else{
-                z = "0";
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + PCOffsetExtended; //ld instruction binary  result
 
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BLT")) {
-            z = "0";
-            p = "0";
 
             if (Integer.parseInt(operation1.split("R")[1]) < Integer.parseInt(operation2.split("R")[1])) { // BLT
-                n = "1";
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
 
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + PCOffsetExtended; //ld instruction binary  result
 
             }
             else{
-                n = "0";
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + PCOffsetExtended; //ld instruction binary  result
 
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BGT")) {
 
-            z = "0";
-            n = "0";
             if (Integer.parseInt(operation1.split("R")[1]) > Integer.parseInt(operation2.split("R")[1])) {  //BGT
-                p = "1";
+
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + PCOffsetExtended; //ld instruction binary  result
 
             }
             else{
-                p = "0";
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted + PCOffsetExtended; //ld instruction binary  result
 
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BLE")) {
-            p = "0";
 
             if (Integer.parseInt(operation1.split("R")[1]) <= Integer.parseInt(operation2.split("R")[1])) {  //BLE
-                z = "1";
-                n = "1";
 
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + PCOffsetExtended; //ld instruction binary  result
 
 
             }
             else{
-                z = "0";
-                n = "0";
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p +PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  +PCOffsetExtended; //ld instruction binary  result
 
             }
         }
         else if(myOpcodeList.get(indexOfInst).get(0).equals("BGE")) {
-            n = "0";
+
 
             if (Integer.parseInt(operation1.split("R")[1]) >= Integer.parseInt(operation2.split("R")[1])) {  //BGE
-                z = "1";
-                p = "1";
+
 
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + PCOffsetExtended; //ld instruction binary  result
 
             }
             else{
-                z = "0";
-                p = "0";
+
                 opp1_Converted =convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(1));
                 opp2_Converted= convertRegistersToBinary(myOpcodeList.get(indexOfInst).get(2));
-                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + n + z + p + PCOffsetExtended; //ld instruction binary  result
+                binaryResult = opcodeList[indexOfOpcode][1] + opp1_Converted + opp2_Converted  + PCOffsetExtended; //ld instruction binary  result
 
             }
         }
@@ -515,10 +496,10 @@ public class main {
     static String  andFuncForm(String opcode, int opIndex){
         String binaryResult= "";
 
-            dest = convertRegistersToBinary(myOpcodeList.get(opIndex).get(1));
-            src1 = convertRegistersToBinary(myOpcodeList.get(opIndex).get(2));
-            src2 = String.format("%6s",  convertRegistersToBinary(myOpcodeList.get(opIndex).get(3))    ).replaceAll(" ", "0");
-            binaryResult=opcode+dest+src1+src2;
+        dest = convertRegistersToBinary(myOpcodeList.get(opIndex).get(1));
+        src1 = convertRegistersToBinary(myOpcodeList.get(opIndex).get(2));
+        src2 = String.format("%6s",  convertRegistersToBinary(myOpcodeList.get(opIndex).get(3))    ).replaceAll(" ", "0");
+        binaryResult=opcode+dest+src1+src2;
 
         return  binaryResult;
     }
@@ -527,38 +508,37 @@ public class main {
     static String  andIFuncForm(String operation,int opIndex){
         String binaryResult= "";
 
-            dest = convertRegistersToBinary(myOpcodeList.get(opIndex).get(1));
-            src1 = convertRegistersToBinary(myOpcodeList.get(opIndex).get(2));
-            // Since immediate can be negative or positive, determine it's sign
+        dest = convertRegistersToBinary(myOpcodeList.get(opIndex).get(1));
+        src1 = convertRegistersToBinary(myOpcodeList.get(opIndex).get(2));
+        // Since immediate can be negative or positive, determine it's sign
 
-            if(Integer.parseInt(myOpcodeList.get(opIndex).get(3))<0){
-                imm=Negative_signed_numb(myOpcodeList.get(opIndex).get(3),6);
-            }
-            else
-                imm=Positive_signed_numb(myOpcodeList.get(opIndex).get(3),6);
+        if(Integer.parseInt(myOpcodeList.get(opIndex).get(3))<0){
+            imm=Negative_signed_numb(myOpcodeList.get(opIndex).get(3),6);
+        }
+        else
+            imm=Positive_signed_numb(myOpcodeList.get(opIndex).get(3),6);
 
 
-            binaryResult=opcodeList[1][1]+dest+src1+imm;
+        binaryResult=opcodeList[1][1]+dest+src1+imm;
 
         return  binaryResult;
     }
 
-        // Split depend on 'R' from register and convert decimal number to binary as non-sign form
-        static String  convertRegistersToBinary(String src1 ){
+    // Split depend on 'R' from register and convert decimal number to binary as non-sign form
+    static String  convertRegistersToBinary(String src1 ){
 
         int registerNo= Integer.parseInt(src1.split("R")[1]);
-           String binaryResult;
-            if(registerNo>15 || registerNo<0 ){
-                System.out.println("There are 16 register in processor.");
-                binaryResult=null;
-            }
-            else{
+        String binaryResult;
+        if(registerNo>15 || registerNo<0 ){
+            System.out.println("There are 16 register in processor.");
+            binaryResult=null;
+        }
+        else{
 
-                binaryResult= Integer.toBinaryString(registerNo);
-                binaryResult  =String.format("%4s",binaryResult).replaceAll(" ","0");
+            binaryResult= Integer.toBinaryString(registerNo);
+            binaryResult  =String.format("%4s",binaryResult).replaceAll(" ","0");
 
-                }
+        }
         return binaryResult;
     }
 }
-
