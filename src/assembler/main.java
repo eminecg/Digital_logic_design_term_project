@@ -260,12 +260,16 @@ public class main{
             outputHex.add(currentInstHex);
 
         }
+        for(int i=0;i<outputBinary.size();i++){
+            System.out.println(outputBinary.get(i));
+
+        }
 
 
         // write output hex values to the output.txt file
         try {
             FileWriter myWriter = new FileWriter(outputFilePath);
-            myWriter.write("v2.raw\n");
+            myWriter.write("v2.0 raw\n");
             int j = 0;
             for ( String hex : outputHex ){
                 if( j<5){
@@ -519,7 +523,7 @@ public class main{
             imm=Positive_signed_numb(myOpcodeList.get(opIndex).get(3),6);
 
 
-        binaryResult=opcodeList[1][1]+dest+src1+imm;
+        binaryResult=operation+dest+src1+imm;
 
         return  binaryResult;
     }
