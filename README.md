@@ -1,4 +1,4 @@
-# Digital_logic_design_term_project
+# Digital Logic Design Term Project
 
 Project is about to design and implement a processor which supports instruction set: (AND,
 OR, ADD, LD, ST, ANDI, ORI, ADDI, XOR, XORI, JUMP, BEQ, BGT, BLT, BGE, BLE). Processor will have
